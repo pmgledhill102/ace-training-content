@@ -1,8 +1,3 @@
----
-title: ACE Prep Week 1
-presenter: Paul Gledhill
-date: 26-04-2025
-layout: cover
 # Define CSS for Google Style
 style: |
   /* Basic Theme Approximation */
@@ -73,55 +68,43 @@ head: |
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
-src: ./content/title.md
----
+
+
 
 ---
-src: ./content/week1/01-agenda.md
+class: gslides-content-slide
 ---
 
----
-src: ./content/week1/02-intro-gcp.md
----
+# IaaS, PaaS and SaaS
 
----
+image: /content/week1/imgs/iaas-paas-saas.jpg
+
+<!--
+Speaker Notes
+
+Briefly define cloud computing models (IaaS, PaaS, SaaS) with examples relevant to banking/finance environments.
+-->
+
+
+
+
 src: ./content/week1/03-global-infra.md
----
-
 ---
 src: ./content/week1/04-resource-hierarchy.md
 ---
-
----
 src: ./content/week1/05-interacting.md
----
-
 ---
 src: ./content/week1/06-billing.md
 ---
-
----
 src: ./content/week1/07-compute-engine.md
----
-
 ---
 src: ./content/week1/08-cloud-storage.md
 ---
-
----
 src: ./content/week1/09-vpc.md
----
-
 ---
 src: ./content/week1/10-iam.md
 ---
-
----
 src: ./content/week1/11-takeaways.md
 ---
-
----
 src: ./content/week1/12-next-steps.md
----
-
 ---
