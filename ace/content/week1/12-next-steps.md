@@ -8,5 +8,4 @@ class: gslides-content-slide
 - Complete labs: "Google Cloud Fundamentals: Core Infrastructure" on Cloud Skills Boost
 - Explore Cloud Console and Cloud Shell hands-on
 
-**Speaker Notes:**  
-Encourage colleagues to complete hands-on labs to reinforce today's learnings and prepare for next week.
+<!-- Encourage colleagues to complete hands-on labs to reinforce today's learnings and prepare for next week. -->

@@ -1,6 +1,6 @@
 ---
 title: ACE Prep Week 1
-presenter: Paul Gledhill
+presenter: true
 date: 26-04-2025
 layout: cover
 # Define CSS for Google Style
@@ -117,11 +117,9 @@ src: ./content/week1/10-iam.md
 ---
 
 ---
-src: ./content/week1/11-takeaways.md
+src: ./content/week1/11-questions.md
 ---
 
 ---
 src: ./content/week1/12-next-steps.md
----
-
 ---
