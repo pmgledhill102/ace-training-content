@@ -123,3 +123,39 @@ src: ./content/week1/11-questions.md
 ---
 src: ./content/week1/12-next-steps.md
 ---
+
+---
+src: ./content/week2/01-agenda.md
+---
+
+---
+src: ./content/week2/02-compute-engine.md
+---
+
+---
+src: ./content/week2/03-managing-instances.md
+---
+
+---
+src: ./content/week2/04-networking.md
+---
+
+---
+src: ./content/week2/05-connectivity.md
+---
+
+---
+src: ./content/week2/06-storage-adv.md
+---
+
+---
+src: ./content/week2/07-managed-databases.md
+---
+
+---
+src: ./content/week2/08-deployment-fundamentals.md
+---
+
+---
+src: ./content/week2/09-questions.md
+---
