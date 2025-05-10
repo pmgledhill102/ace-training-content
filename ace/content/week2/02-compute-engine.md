@@ -91,6 +91,25 @@ gcloud compute instances create cs2-instance \
 
 ---
 
+# Compute Engine: Understanding Machine Series & Naming
+
+| Prefix/Suffix | Meaning                                   | Primary Characteristic/Processor Family Indicator | Example Series | Typical Use Case                                  |
+| :------------ | :---------------------------------------- | :---------------------------------------------- | :------------- | :------------------------------------------------ |
+| **E** | Efficiency / General Purpose (Cost-Optimized) | Balanced vCPU & Memory, often Intel             | E2             | General web/app servers, small-medium databases   |
+| **N** | General Purpose                           | Balanced vCPU & Memory, often Intel             | N1, N2         | Wide range of workloads, good default             |
+| **...D** | AMD Processor                             | Indicates AMD EPYC processor                    | N2D, C2D, T2D  | Workloads benefiting from AMD architecture        |
+| **...A** | Arm Processor                             | Indicates Arm-based processor (e.g., Ampere Altra)| T2A            | Scale-out workloads, Arm-native applications      |
+| **C** | Compute Optimized                         | High vCPU performance per core, often Intel     | C2, C3         | CPU-intensive tasks, HPC, gaming servers          |
+| **M** | Memory Optimized                          | Very high memory-to-vCPU ratio, often Intel   | M1, M2, M3     | In-memory databases, large caches, SAP HANA       |
+| **A** | Accelerator Optimized (GPUs)              | Designed for attaching NVIDIA GPUs              | A2, A3         | Machine Learning, HPC, scientific computing       |
+| **G** | Graphics Optimized (GPUs for Visuals)     | Designed for attaching NVIDIA GPUs (graphics focused) | G2             | Virtual workstations, graphics rendering          |
+| **T** | Scale-Out Optimized (often Arm or specific AMD)| Designed for scale-out workloads, specific architectures | T2D, T2A    | Web servers, application frontends, microservices |
+| *(Number)* | Generation                                | Higher number usually indicates newer generation  | N1 vs. N2 vs. N4 | Newer generations offer better perf/price       |
+
+* **Note:** "Often Intel" is mentioned as historically Intel CPUs were dominant, but GCP is increasingly offering AMD and Arm. The suffix (D or A) is the clearest indicator for AMD/Arm. Always check the latest GCP documentation for specific processor details for each series and generation as offerings evolve. "T" series (like T2D, T2A) are also a form of general-purpose but optimized for scale-out.
+
+---
+
 # Custom Machine Types - Deep Dive
 
 * **Supported Series:** E2, N1, N2, N2D series allow for custom configurations.
