@@ -73,7 +73,12 @@ head: |
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
-src: ./content/title.md
+---
+
+# Associate Certified Enginner
+
+---
+src: ./content/week1/00-modules.md
 ---
 
 ---

@@ -90,23 +90,31 @@ gcloud compute instances create cs2-instance \
   * Via `gcloud`: `gcloud compute instance-templates create my-template --machine-type=e2-medium ...`
 
 ---
+zoom: 0.8
+---
 
-# Compute Engine: Understanding Machine Series & Naming
+# Compute Instance Types
 
-| Prefix/Suffix | Meaning                                   | Primary Characteristic/Processor Family Indicator | Example Series | Typical Use Case                                  |
+| Prefix/Suffix | Meaning                                   | Characteristic | Example | Typical Use Case                                  |
 | :------------ | :---------------------------------------- | :---------------------------------------------- | :------------- | :------------------------------------------------ |
-| **E** | Efficiency / General Purpose (Cost-Optimized) | Balanced vCPU & Memory, often Intel             | E2             | General web/app servers, small-medium databases   |
-| **N** | General Purpose                           | Balanced vCPU & Memory, often Intel             | N1, N2         | Wide range of workloads, good default             |
-| **...D** | AMD Processor                             | Indicates AMD EPYC processor                    | N2D, C2D, T2D  | Workloads benefiting from AMD architecture        |
-| **...A** | Arm Processor                             | Indicates Arm-based processor (e.g., Ampere Altra)| T2A            | Scale-out workloads, Arm-native applications      |
+| **E** / **N** | General Purpose (Cost-Optimized) | Balanced vCPU & Memory, often Intel             | E2             | General web/app, small-medium databases   |
 | **C** | Compute Optimized                         | High vCPU performance per core, often Intel     | C2, C3         | CPU-intensive tasks, HPC, gaming servers          |
 | **M** | Memory Optimized                          | Very high memory-to-vCPU ratio, often Intel   | M1, M2, M3     | In-memory databases, large caches, SAP HANA       |
 | **A** | Accelerator Optimized (GPUs)              | Designed for attaching NVIDIA GPUs              | A2, A3         | Machine Learning, HPC, scientific computing       |
-| **G** | Graphics Optimized (GPUs for Visuals)     | Designed for attaching NVIDIA GPUs (graphics focused) | G2             | Virtual workstations, graphics rendering          |
-| **T** | Scale-Out Optimized (often Arm or specific AMD)| Designed for scale-out workloads, specific architectures | T2D, T2A    | Web servers, application frontends, microservices |
+| **G** | Graphics Optimized (GPUs for Visuals)     | Designed for attaching NVIDIA GPUs (graphics focused) | G2             | Virtual workstations, graphics rendering, inference   |
+| **T** | Scale-Out Optimized (often ARM or specific AMD)| Designed for scale-out workloads, specific architectures | T2D, T2A    | Web servers, application frontends, microservices |
+
+---
+
+# Compute Instance Types (Cont.)
+
+| Prefix/Suffix | Meaning                                   | Characteristic | Example | Typical Use Case                                  |
+| :------------ | :---------------------------------------- | :---------------------------------------------- | :------------- | :------------------------------------------------ |
+| **...D** | AMD Processor                             | Indicates AMD EPYC processor                    | N2D, C2D, T2D  | Workloads benefiting from AMD architecture        |
+| **...A** | ARM Processor                             | Indicates Arm-based processor (e.g., Ampere Altra)| T2A            | Scale-out workloads, Arm-native applications      |
 | *(Number)* | Generation                                | Higher number usually indicates newer generation  | N1 vs. N2 vs. N4 | Newer generations offer better perf/price       |
 
-* **Note:** "Often Intel" is mentioned as historically Intel CPUs were dominant, but GCP is increasingly offering AMD and Arm. The suffix (D or A) is the clearest indicator for AMD/Arm. Always check the latest GCP documentation for specific processor details for each series and generation as offerings evolve. "T" series (like T2D, T2A) are also a form of general-purpose but optimized for scale-out.
+**Note:** "Often Intel" is mentioned as historically Intel CPUs were dominant, but GCP is increasingly offering AMD and Arm. The suffix (D or A) is the clearest indicator for AMD/Arm.
 
 ---
 
@@ -115,24 +123,20 @@ gcloud compute instances create cs2-instance \
 * **Supported Series:** E2, N1, N2, N2D series allow for custom configurations.
 * **Flexibility:** Define specific vCPU counts and memory sizes.
   * **vCPUs:** Must be an even number (unless 1 vCPU). Specific ranges apply per series.
-  * **Memory:** Typically between 0.9 GB and 6.5 GB per vCPU for N1, or up to 8GB per vCPU for N2/N2D/E2 (check current docs for exact limits and increments).
-  * **Extended Memory:** Some series allow memory beyond the standard per-vCPU limits for an additional cost.
+  * **Memory:** Typically between 0.9 GB and 8GB per vCPU.
+  * **Extended Memory:** Some series allow memory beyond standard per-vCPU limits for additional cost.
 * **When to Use:**
   * **Right-sizing:** Precisely match VM resources to workload demands, avoiding over-provisioning.
   * **Cost Optimization:** Pay only for the resources you configure, potentially saving money compared to the next largest predefined type.
-  * Workloads with specific needs (e.g., high memory with low CPU, or vice-versa, within limits).
 * **Comparison:**
   * **Predefined:** Simpler to choose, optimized for common workloads.
   * **Custom:** Maximum flexibility, best for cost/resource optimization when predefined don't fit.
-* **Creating a Custom VM (Example):**
-  * Console: During VM creation, select series (e.g., E2) and choose "Custom" for Cores and Memory.
-  * `gcloud`: `gcloud compute instances create my-custom-vm --custom-cpu=6 --custom-memory=20GB ...`
 
 ---
 
 # Spot VMs - Characteristics & Use Cases
 
-* **What are they?** VMs that use spare Google Cloud capacity at significantly lower prices (60-91% off on-demand).
+* **What are they?** Spare Google Cloud capacity at significantly lower prices (60-91% off on-demand).
 * **Key Characteristic: Preemption**
   * Compute Engine can reclaim (preempt) Spot VMs at any time if resources are needed elsewhere.
   * A **30-second warning** is given via ACPI G2 Soft Off signal or metadata server before preemption.
@@ -142,6 +146,8 @@ gcloud compute instances create cs2-instance \
   * Workloads must be **fault-tolerant** and able to handle preemption gracefully.
   * Ideal for **stateless applications** or those that can checkpoint progress.
   * Use startup/shutdown scripts to save state or clean up.
+
+<!--
 * **Common Use Cases:**
   * Batch processing jobs (e.g., data analysis, rendering, transcoding).
   * High-performance computing (HPC) simulations.
@@ -150,13 +156,15 @@ gcloud compute instances create cs2-instance \
   * Cost-sensitive development and test environments.
 * **Not Suitable For:** Critical, stateful applications requiring guaranteed uptime (e.g., primary databases, interactive user-facing apps sensitive to interruption).
 
+-->
+
 ---
 
 # GPUs & Accelerator-Optimized VMs
 
 * **What are GPUs?** Graphics Processing Units, specialized hardware for parallel processing.
 * **Attaching GPUs:**
-  * Can be attached to general-purpose N1 machine types or specialized Accelerator-Optimized A2 or G2 machine types.
+  * Attached to gen-purpose N1 machine types or specialized Accelerator-Optimized A2 or G2 machines.
   * Specific GPU types (e.g., NVIDIA Tesla T4, V100, A100, L4) are available, varying by region and zone.
   * Number of GPUs per VM is limited based on machine type.
 * **Driver Installation:** You are responsible for installing the appropriate NVIDIA drivers on the VM. Google provides resources and some images may come with drivers pre-installed.
@@ -167,6 +175,8 @@ gcloud compute instances create cs2-instance \
 * **Pricing:** GPUs are billed per second while attached to a running VM, in addition to the VM cost. Spot VMs can also have GPUs attached for further cost savings.
 * **Quotas:** GPU usage is subject to quotas, which may need to be increased.
 
+---
+zoom: 0.8
 ---
 
 # Sole-Tenant Nodes - Isolation & Compliance
@@ -190,7 +200,7 @@ gcloud compute instances create cs2-instance \
 # Instance Metadata & Scripts - In-Depth
 
 * **Metadata Server:** A special server accessible from within each VM at a well-known IP address (`169.254.169.254` or `metadata.google.internal`).
-  * Endpoint: `http://metadata.google.internal/computeMetadata/v1/` (requires `Metadata-Flavor: Google` header).
+  * Endpoint: `http://metadata/computeMetadata/v1/` (requires `Metadata-Flavor: Google` header).
   * Provides access to instance-specific information.
 * **Common Metadata Keys (Examples):**
   * `instance/id`: Unique ID of the instance.
@@ -199,6 +209,47 @@ gcloud compute instances create cs2-instance \
   * `instance/network-interfaces/0/ip`: Internal IP of the first network interface.
   * `instance/network-interfaces/0/access-configs/0/external-ip`: External IP.
   * `instance/attributes/`: Custom metadata key-value pairs.
+
+---
+
+# Instance Metadata & Scripts - Examples
+
+```sh
+~$ curl http://metadata/computeMetadata/v1/
+<!DOCTYPE html>
+<html lang=en>
+  ...
+  <p>Your client does not have permission to get URL <code>/computeMetadata/v1/</code> from this server.
+  Missing Metadata-Flavor:Google header. <ins>That’s all we know.</ins>
+```
+
+```sh
+~$ curl -H "Metadata-Flavor: Google" http://metadata/computeMetadata/v1/
+instance/
+oslogin/
+project/
+```
+
+```sh
+~$ curl -H "Metadata-Flavor: Google" http://metadata/computeMetadata/v1/instance/network-interfaces/0/ip
+10.154.0.27
+```
+
+```sh
+~$ curl -H "Metadata-Flavor: Google" http://metadata/computeMetadata/v1/instance/id
+5092246914354860185
+```
+
+```sh
+~$ curl -H "Metadata-Flavor: Google" http://metadata/computeMetadata/v1/instance/attributes/colou
+r
+yellow
+```
+
+---
+
+# Instance Metadata & Scripts - Custom
+
 * **Custom Metadata:**
   * Key-value pairs you define when creating an instance or template.
   * Used to pass configuration data, license keys, role information, etc., to instances.
@@ -212,27 +263,3 @@ gcloud compute instances create cs2-instance \
   * Executed when an instance is gracefully shut down (e.g., via API call, not preemption).
   * Best-effort execution: Given a limited time window (default 90s) to complete.
   * Use for: Graceful application shutdown, saving state, uploading logs, de-registering from services.
-
----
-
-# Managing Compute Engine Instances: Resizing VMs - Process & Considerations
-
-* **What is Resizing?** Changing the machine type (vCPUs, memory, series) of an existing VM.
-* **Process:**
-    1.  **Stop** the VM instance. Resizing cannot be done on a running instance.
-    2.  **Edit** the instance configuration:
-    * Select a new predefined machine type or define a new custom machine type.
-    * The boot disk and any attached persistent disks remain.
-    3.  **Start** the VM instance.
-* **Impact on IP Addresses:**
-  * **Internal IP:** Remains the same (as it's tied to the subnet and instance resource, not the machine type).
-  * **External IP (Ephemeral):** If the VM has an ephemeral external IP, it *may change* when the instance is stopped and started.
-  * **External IP (Static):** If a static external IP is assigned, it will be reattached.
-* **OS & Application Considerations:**
-  * The OS should generally adapt to new CPU/memory.
-  * Ensure applications are configured to utilize available resources or can handle changes.
-  * If boot disk was sized for a smaller machine, ensure sufficient space for OS/apps on the new, larger configuration.
-* **When to Resize:**
-  * **Scale Up:** Workload demands more CPU/memory for better performance.
-  * **Scale Down:** Workload is over-provisioned; reduce resources to save costs.
-  * Change machine series (e.g., N1 to E2 for cost, or to C2 for compute optimization).

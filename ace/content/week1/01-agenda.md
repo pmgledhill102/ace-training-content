@@ -1,5 +1,7 @@
 # Week 1 Agenda
 
+**Fundamentals: Core Infrastructure**
+
 - Introduction to Google Cloud
 - Global Infrastructure
 - Resource Hierarchy

@@ -1,4 +1,10 @@
-# VPC Connectivity Options: VPC Network Peering - In-Depth
+# VPC Connectivity Options
+
+---
+zoom: 0.8
+---
+
+# VPC Network Peering - In-Depth
 
 * **What is it?** Allows private RFC 1918 connectivity between two VPC networks using Google's internal backbone, regardless of whether they are in the same project or organization.
 * **How it Works:**
@@ -21,8 +27,10 @@
   * Segmenting workloads into different VPCs for administrative or security boundaries while allowing inter-communication.
 
 ---
+zoom: 0.8
+---
 
-# VPC Connectivity Options: Shared VPC (XPN) - Architecture & Benefits
+# Shared VPC (XPN) - Architecture & Benefits
 
 * **What is Shared VPC (Cross-Project Networking - XPN)?** Allows an organization to connect resources from multiple **Service Projects** to a common, centrally managed VPC network in a **Host Project**.
 * **Key Roles:**
@@ -45,8 +53,10 @@
   * Multi-tenant applications where tenants (in Service Projects) need access to a shared network infrastructure.
 
 ---
+zoom: 0.8
+---
 
-# VPC Connectivity Options: Cloud VPN - Types & Use Cases
+# Cloud VPN - Types & Use Cases
 
 * **What is Cloud VPN?** Securely connects your on-premises network or another cloud provider's network to your Google Cloud VPC network over an IPsec VPN tunnel.
 * **Types of Cloud VPN Gateways:**
@@ -74,8 +84,10 @@
   * Securely accessing GCP resources from remote offices or users (though BeyondCorp Enterprise is often better for user access).
 
 ---
+zoom: 0.8
+---
 
-# VPC Connectivity Options: Cloud Interconnect - Options & Benefits
+# Cloud Interconnect - Options & Benefits
 
 * **What is Cloud Interconnect?** Provides high-bandwidth, low-latency, private connectivity between your on-premises network and your Google Cloud VPC network. Traffic does not traverse the public internet.
 * **Options:**
