@@ -90,7 +90,7 @@
 zoom: 0.8
 ---
 
-| Feature            | Custom Image                                  | Persistent Disk Snapshot                      | Instance Template                             |
+| **Feature**        | **Custom Image**                              | **Persistent Disk Snapshot**                  | **Instance Template**                         |
 | :----------------- | :-------------------------------------------- | :-------------------------------------------- | :-------------------------------------------- |
 | **Primary Purpose** | Create new, bootable VMs with custom OS/software | Backup & Disaster Recovery for disks          | Define & quickly deploy full VM configurations |
 | **Content** | Full OS, applications, configurations         | Block-level copy of a disk's data             | VM specification (machine type, image, disks, network, metadata, etc.) |

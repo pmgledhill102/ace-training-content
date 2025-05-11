@@ -30,6 +30,18 @@ zoom: 0.95
   * You can convert an auto-mode VPC to custom-mode, but you cannot convert custom-mode to auto-mode.
 
 ---
+zoom: 0.8
+---
+
+## Default Network - Subnets
+
+![Default Network Firewalls Screenshot](/default-firewalls.png)
+
+## Default Network - Firewall
+
+![Default Network Subnets Screenshot](/default-network-subnets.png)
+
+---
 
 # Subnet IP Addressing - Primary Ranges
 

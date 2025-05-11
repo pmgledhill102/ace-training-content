@@ -241,8 +241,7 @@ project/
 ```
 
 ```sh
-~$ curl -H "Metadata-Flavor: Google" http://metadata/computeMetadata/v1/instance/attributes/colou
-r
+~$ curl -H "Metadata-Flavor: Google" http://metadata/computeMetadata/v1/instance/attributes/colour
 yellow
 ```
 

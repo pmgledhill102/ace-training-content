@@ -1,3 +1,7 @@
+# Week 2 Quiz
+
+---
+
 **Question 1:** You need to deploy a fleet of 10 identical web server VMs. You want to ensure each VM is configured with the same machine type, boot disk image, network tags, and a specific startup script. What is the most efficient way to achieve this in Compute Engine?
 
 - A. Manually create each VM, carefully selecting the same options each time.

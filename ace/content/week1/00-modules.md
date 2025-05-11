@@ -4,7 +4,7 @@
 ```mermaid
 %%{init: {'theme': 'base'}}%%
 kanban
-    Week 1
+    **>>> Week 1 <<<**
         👉 This Week
         💡 Fundamentals: Core Infrastructure
         🛠️ Implement Load Balancers on Compute Engine

@@ -77,6 +77,9 @@ head: |
 
 # Associate Certified Enginner
 
+## Week 1
+---
+
 ---
 src: ./content/week1/00-modules.md
 ---
@@ -127,6 +130,18 @@ src: ./content/week1/11-questions.md
 
 ---
 src: ./content/week1/12-next-steps.md
+---
+
+---
+layout: cover
+---
+
+# Associate Certified Enginner
+
+## Week 2
+
+---
+src: ./content/week2/00-modules.md
 ---
 
 ---

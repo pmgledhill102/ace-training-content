@@ -9,7 +9,7 @@ kanban
         💡 Fundamentals: Core Infrastructure
         🛠️ Implement Load Balancers on Compute Engine
 
-    Week 2
+    **>>> Week 2 <<<**
         👉 This Week
         💡 Essential Cloud Infrastructure: Foundation
         💡 Essential Cloud Infrastructure: Core Services

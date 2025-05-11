@@ -1,25 +1,42 @@
 # VPC Connectivity Options
 
 ---
-zoom: 0.8
+zoom: 0.7
 ---
 
-# VPC Network Peering - In-Depth
+# Standalone Project
+
+![Default Network Subnets Screenshot](/shared-vpc-1.png)
+
+<!--
+- One Project
+- Two Subnets
+- An instance in each
+-->
+
+---
+
+# VPC Network Peering
 
 * **What is it?** Allows private RFC 1918 connectivity between two VPC networks using Google's internal backbone, regardless of whether they are in the same project or organization.
 * **How it Works:**
   * Each VPC network maintains its own routes and firewall rules.
   * When peered, subnet routes from each network are exchanged, allowing resources to communicate using internal IP addresses.
   * Traffic stays within Google's network, not traversing the public internet.
-* **Configuration Steps:**
-    1.  Create a peering connection from VPC-A to VPC-B.
-    2.  Create a corresponding peering connection from VPC-B to VPC-A.
-    3.  Once both are established and active, routes are exchanged.
 * **Key Characteristics:**
   * **Non-Transitive:** If VPC-A is peered with VPC-B, and VPC-B is peered with VPC-C, VPC-A *cannot* automatically reach VPC-C through VPC-B. Direct peering between A and C would be required.
   * **No Overlapping IP CIDR Ranges:** Subnet IP ranges in peered networks must not overlap.
   * **Firewall Rules Not Exchanged:** Each VPC enforces its own firewall rules. You must ensure firewall rules in *both* VPCs allow the desired traffic between peered subnets.
-  * **IAM Permissions:** Requires `compute.networks.addPeering` and `compute.networks.removePeering` permissions.
+  * **IAM Permissions:**  `compute.networks.addPeering` and `compute.networks.removePeering` needed.
+
+---
+
+# VPC Network Peering
+
+* **Configuration Steps:**
+    1. Create a peering connection from VPC-A to VPC-B.
+    2. Create a corresponding peering connection from VPC-B to VPC-A.
+    3. Once both are established and active, routes are exchanged.
 * **Use Cases:**
   * Connecting services in different projects/VPCs within the same organization.
   * SaaS providers offering private connectivity to their services from customer VPCs.
@@ -27,7 +44,19 @@ zoom: 0.8
   * Segmenting workloads into different VPCs for administrative or security boundaries while allowing inter-communication.
 
 ---
-zoom: 0.8
+
+![Default Network Subnets Screenshot](/network-peering.png)
+
+<!--
+
+* **Configuration Steps:**
+    1.  Create a peering connection from VPC-A to VPC-B.
+    2.  Create a corresponding peering connection from VPC-B to VPC-A.
+    3.  Once both are established and active, routes are exchanged.
+-->
+
+---
+zoom: 0.9
 ---
 
 # Shared VPC (XPN) - Architecture & Benefits
@@ -38,22 +67,44 @@ zoom: 0.8
   * **Service Projects:** Projects that are attached to the Host Project. Can create and manage their own resources (e.g., VMs, GKE clusters, Cloud SQL instances) that use subnets from the Host Project's Shared VPC.
 * **What Can Be Shared:**
   * The Host Project administrator can choose to share all subnets or specific subnets with Service Projects.
-* **IAM Roles for Shared VPC:**
-  * **Host Project Admin (`compute.xpnAdmin`):** Configures Shared VPC, attaches Service Projects.
-  * **Service Project Admin (`compute.xpnHostUser` - less common):** Can use shared network resources.
-  * **Service Project User (`compute.networkUser`):** Granted to users/service accounts in Service Projects to allow them to create resources that use the shared network. This role is granted at the Host Project level or on specific shared subnets.
 * **Benefits:**
   * **Centralized Network Administration:** Network policies, security rules, and connectivity are managed centrally by a network admin team in the Host Project.
   * **Separation of Duties:** Application teams in Service Projects can manage their resources without needing network admin privileges.
   * **Consistent Network Policies:** Ensures all connected resources adhere to common security and connectivity standards.
   * **Simplified IP Management:** Avoids IP conflicts and simplifies IP allocation across an organization.
+
+---
+zoom: 0.9
+---
+
+# Shared VPC (XPN) - Use Cases & Permissions
+
 * **Use Cases:**
   * Large enterprises with a dedicated central networking team.
   * Organizations needing to enforce consistent network security policies across multiple projects or departments.
   * Multi-tenant applications where tenants (in Service Projects) need access to a shared network infrastructure.
+* **IAM Roles for Shared VPC:**
+  * **Host Project Admin (`compute.xpnAdmin`):** Configures Shared VPC, attaches Service Projects.
+  * **Service Project Admin (`compute.xpnHostUser` - less common):** Can use shared network resources.
+  * **Service Project User (`compute.networkUser`):** Granted to users/service accounts in Service Projects to allow them to create resources that use the shared network. This role is granted at the Host Project level or on specific shared subnets.
 
 ---
-zoom: 0.8
+zoom: 0.7
+---
+
+# Shared VPC
+
+![Default Network Subnets Screenshot](/shared-vpc-2.png)
+
+<!--
+- Host Project
+- Two Subnets
+- 2 Service Projects
+- Allocated IP in Host project's subnet
+-->
+
+---
+zoom: 0.6
 ---
 
 # Cloud VPN - Types & Use Cases
@@ -61,6 +112,7 @@ zoom: 0.8
 * **What is Cloud VPN?** Securely connects your on-premises network or another cloud provider's network to your Google Cloud VPC network over an IPsec VPN tunnel.
 * **Types of Cloud VPN Gateways:**
   * **Classic VPN:**
+    * **Classic VPN tunnels will be deprecated on August 1, 2025**
     * Supports static or policy-based routing.
     * Offers a 99.9% availability SLA.
     * Uses a regional VPN gateway resource.
@@ -84,24 +136,30 @@ zoom: 0.8
   * Securely accessing GCP resources from remote offices or users (though BeyondCorp Enterprise is often better for user access).
 
 ---
-zoom: 0.8
+zoom: 0.95
 ---
 
-# Cloud Interconnect - Options & Benefits
+# Cloud Interconnect
 
 * **What is Cloud Interconnect?** Provides high-bandwidth, low-latency, private connectivity between your on-premises network and your Google Cloud VPC network. Traffic does not traverse the public internet.
 * **Options:**
   * **Dedicated Interconnect:**
     * A direct physical connection between your on-premises network and Google's network at a Google colocation facility.
-    * Provides 10 Gbps or 100 Gbps circuits (one or more).
+    * Provides **10 Gbps or 100 Gbps** circuits (one or more).
     * You are responsible for the circuit from your premises to the colocation facility.
     * Highest performance and reliability.
   * **Partner Interconnect:**
     * Connect to Google's network through a supported service provider partner.
-    * Offers various bandwidth options (e.g., 50 Mbps to 50 Gbps).
+    * Offers various bandwidth options (e.g., **50 Mbps to 50 Gbps**).
     * The partner provides the circuit from your premises to their network, which then connects to Google.
     * Often more flexible and quicker to provision than Dedicated Interconnect if you're not already in a Google colocation.
-* **VLAN Attachments:** Logical connections over your Interconnect. Each attachment is associated with a Cloud Router for BGP route exchange and a specific VPC network region.
+
+---
+zoom: 0.95
+---
+
+# Cloud Interconnect
+
 * **Benefits:**
   * **High Bandwidth & Low Latency:** Significantly better than internet-based connections or VPN.
   * **Consistent Performance:** More predictable network performance.
