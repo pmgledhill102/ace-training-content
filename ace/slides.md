@@ -173,9 +173,5 @@ src: ./content/week2/07-managed-databases.md
 ---
 
 ---
-src: ./content/week2/08-deployment-fundamentals.md
----
-
----
-src: ./content/week2/09-questions.md
+src: ./content/week2/08-questions.md
 ---

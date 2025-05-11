@@ -1,25 +1,40 @@
-# Cloud Storage: Bucket Naming, Locations, and Dual-Region Details
+# Cloud Storage
+
+---
+
+# Bucket Naming
 
 * **Bucket Naming (Recap):**
   * Must be **globally unique** across all of Google Cloud.
   * Adhere to DNS naming conventions (lowercase, numbers, hyphens, dots; no leading/trailing dots/hyphens).
   * Example: `my-company-app-prod-backups-unique123`
-* **Bucket Locations - Impact on Latency, Availability, Cost:**
-  * **Region:**
-    * Data stored redundantly across zones *within* that single region (e.g., `us-central1`).
-    * Lowest latency for users/apps *in or near* that region.
-    * SLA: Typically 99.9% or 99.95% (check current docs).
-    * Cost: Baseline storage cost for that region.
-  * **Dual-region:**
-    * Data stored redundantly across zones in *two specific, pre-defined regions* (e.g., `nam4` which is `us-central1` and `us-east1`).
-    * Provides low latency access from both regions and high availability if one region becomes unavailable.
-    * SLA: Typically 99.95% or 99.99%.
-    * Cost: Higher than single-region storage, but lower than multi-region for the same data.
-  * **Multi-region:**
-    * Data stored redundantly across zones in *multiple regions* within a large geographic area (e.g., `US`, `EU`, `ASIA`).
-    * Highest availability against regional outages. Lowest latency for users spread across that continent/area.
-    * SLA: Typically 99.99% or 99.995%.
-    * Cost: Highest storage cost per GB.
+
+---
+zoom: 0.9
+---
+
+# Bucket Locations - Impact
+
+* **Region:**
+  * Data stored redundantly across zones *within* that single region (e.g., `us-central1`).
+  * Lowest latency for users/apps *in or near* that region.
+  * SLA: Typically 99.9% or 99.95% (check current docs).
+  * Cost: Baseline storage cost for that region.
+* **Dual-region:**
+  * Data stored redundantly across zones in *two specific, pre-defined regions* (e.g., `nam4` which is `us-central1` and `us-east1`).
+  * Low latency access from both regions and high availability if one region becomes unavailable.
+  * SLA: Typically 99.95% or 99.99%.
+  * Cost: Higher than single-region storage, but lower than multi-region for the same data.
+* **Multi-region:**
+  * Data stored redundantly across zones in *multiple regions* within a large geographic area (e.g., `US`, `EU`, `ASIA`).
+  * Highest availability against regional outages. Lowest latency for users spread across that continent/area.
+  * SLA: Typically 99.99% or 99.995%.
+  * Cost: Highest storage cost per GB.
+
+---
+
+# Location Choice
+
 * **Choosing a Location:**
   * Consider where your users/applications are.
   * What are your availability requirements (protection against zonal vs. regional outage)?
@@ -28,7 +43,7 @@
 
 ---
 
-# Cloud Storage: Signed URLs - Generation & Security
+# Signed URLs
 
 * **What are Signed URLs?** Time-limited URLs that provide temporary access to a specific Cloud Storage object, even if the object is private.
 * **How they Work:**
@@ -41,6 +56,11 @@
   * Signature.
   * Google Access ID (of the signer).
 * **Supported HTTP Methods:** `GET` (download), `PUT` (upload), `DELETE`, `HEAD`.
+
+---
+
+# Signed URLs
+
 * **Generation:**
   * Using client libraries (Python, Java, Node.js, etc.).
   * Using `gsutil signurl` command.
@@ -48,7 +68,7 @@
   * **Short Expiration Times:** Grant access for the minimum necessary duration.
   * **HTTPS:** Always use HTTPS to protect the URL in transit.
   * **Protect the Signer:** The ability to generate signed URLs is powerful. Secure the service account keys or user credentials that have signing permissions.
-  * **Principle of Least Privilege:** The signer should only have permissions for the intended action (e.g., read-only if generating download URLs).
+  * **Principle of Least Privilege:** The signer should only have permissions for the intended action
 * **Use Cases:**
   * Allowing users to download their private files (e.g., invoices, reports) from your application.
   * Enabling users to upload files directly to a private bucket from a web browser.
@@ -57,9 +77,9 @@
 
 ---
 
-# Cloud Storage: Object Versioning
+# Object Versioning
 
-* **What is Object Versioning?** A bucket-level setting that, when enabled, keeps a history of object modifications. Each overwrite or deletion of an object creates a new version or a noncurrent (archived) version.
+* **What is Object Versioning?** A bucket-level setting, when enabled, keeps a history of object modifications. Each overwrite or deletion of an object creates a new version or a noncurrent (archived) version.
 * **Enabling Versioning:**
   * Can be enabled on a bucket at any time. Cannot be disabled once enabled (but can be suspended).
   * `gsutil versioning set on gs://BUCKET_NAME`
@@ -69,6 +89,11 @@
   * When you overwrite a live object: The existing live version becomes a **noncurrent version**, and the new content becomes the new live version.
   * When you delete a live object (without specifying a generation): The live version becomes a **noncurrent version** (it's not truly deleted from storage immediately).
   * To permanently delete an object, you must delete its specific generation or all its versions (or use lifecycle rules).
+
+---
+
+# Object Versioning
+
 * **Accessing Versions:**
   * Live version: Accessed by default using the object name.
   * Noncurrent versions: Accessed by specifying the object name and its generation number.
@@ -83,7 +108,7 @@
 
 ---
 
-# Cloud Storage: Uniform Bucket-Level Access (UBLA)
+# Uniform Bucket-Level Access (UBLA)
 
 * **The Problem UBLA Solves:**
   * Historically, Cloud Storage supported two access control systems: IAM and ACLs (Access Control Lists).
@@ -93,6 +118,11 @@
   * A bucket-level setting that **disables ACLs** for all objects in the bucket.
   * When enabled, access control is solely managed by **IAM permissions** applied at the bucket or project/folder/org level.
   * This simplifies permission management and aligns Cloud Storage with how most other GCP services handle access control.
+
+---
+
+# Uniform Bucket-Level Access (UBLA)
+
 * **Benefits of UBLA:**
   * **Simplicity:** Only one system (IAM) to manage and understand.
   * **Consistency:** Access control works like other GCP services.
@@ -100,7 +130,7 @@
   * **Prevents ACL-based "surprises":** Eliminates the risk of an object ACL granting unintended access that bypasses IAM policies.
 * **Enabling UBLA:**
   * Can be set during bucket creation or enabled on an existing bucket.
-  * If enabling on an existing bucket with ACLs, review existing ACLs as they will no longer be effective. Google provides tools to analyze ACLs before migration.
+  * If enabling on an existing bucket with ACLs, review existing ACLs as they will no longer be effective.
 * **Recommendation:**
   * **Enable Uniform Bucket-Level Access for all new buckets.**
   * Consider migrating existing buckets to UBLA for improved security posture and manageability.
@@ -108,7 +138,7 @@
 
 ---
 
-# Cloud Storage: Requester Pays
+# Requester Pays
 
 * **Standard Billing Model:** By default, the **bucket owner** pays for:
   * Storage costs of the data.
@@ -117,17 +147,13 @@
 * **What is Requester Pays?**
   * A bucket-level setting that shifts the cost of **network egress and operation charges** to the **requester** of the data, rather than the bucket owner.
   * The bucket owner still pays for storage costs.
-* **Enabling Requester Pays:**
-  * Set on a bucket via Cloud Console, `gsutil`, or API.
-  * `gsutil requesterpays set on gs://BUCKET_NAME`
-* **How Requests are Made to a Requester Pays Bucket:**
-  * The requester must include a **billing project ID** in their request (e.g., using the `-u <project_id>` flag in `gsutil`, or appropriate headers/parameters in API calls).
-  * This project will be billed for the download and operation costs.
-  * If the billing project is not provided, the request will fail (unless the requester is the bucket owner).
 * **Use Cases:**
   * **Sharing large datasets:** Make large datasets (e.g., scientific data, public domain archives) available without the bucket owner incurring all the download costs.
   * **Service providers:** Offer data access where consumers pay for their own usage.
+
+<!--
 * **Considerations:**
   * Not suitable for all scenarios (e.g., serving a typical website where you want to cover user download costs).
   * Users must be aware that they need to specify a billing project.
   * Anonymous access is not possible with Requester Pays (as a billing project is needed).
+-->
