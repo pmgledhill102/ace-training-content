@@ -157,3 +157,134 @@ zoom: 0.9
   * Users must be aware that they need to specify a billing project.
   * Anonymous access is not possible with Requester Pays (as a billing project is needed).
 -->
+
+---
+
+# Data Loading: Command-Line Upload to Cloud Storage (`gsutil`)
+
+* **`gsutil` Tool:** The primary command-line tool for interacting with Google Cloud Storage. Part of the Cloud SDK.
+* **Common Upload Scenarios:**
+  * Uploading individual files.
+  * Uploading entire directories.
+  * Synchronizing directories.
+* **Basic Upload Command (`gsutil cp`):**
+  * Copies files/directories from a source to a destination.
+  * `gsutil cp [LOCAL_FILE_PATH] gs://[BUCKET_NAME]/[OBJECT_PATH]`
+  * `gsutil cp -r [LOCAL_DIRECTORY_PATH] gs://[BUCKET_NAME]/[DESTINATION_PATH_PREFIX]` (recursive for directories)
+
+---
+
+# `gsutils` examples
+
+* **Example: Uploading a single file:**
+  * `gsutil cp my-report.csv gs://my-company-data-lake/reports/my-report.csv`
+* **Example: Uploading a directory:**
+  * `gsutil cp -r ./local-images/ gs://my-website-assets/images/`
+* **Key `gsutil cp` Flags for Uploads:**
+  * `-r` (recursive): Essential for copying directories.
+  * `-m` (multi-threaded/multi-processing): Performs operations in parallel
+* **`gsutil rsync` for Synchronization:**
+  * Makes the destination match the source, only copying changed or new files. Efficient for regular updates.
+  * `gsutil rsync -r [LOCAL_DIRECTORY_PATH] gs://[BUCKET_NAME]/[DESTINATION_PATH_PREFIX]`
+  * Can also delete files at the destination that are not at the source (use with `-d` flag and caution).
+* **Permissions:** The identity running `gsutil` (user or service account) needs appropriate IAM permissions on the target bucket (e.g., `roles/storage.objectCreator` or `roles/storage.objectAdmin`).
+
+---
+
+# From Cloud Storage into Big Query
+
+Cloud Storage often acts as a staging area or data lake, from which data is loaded into other GCP services for processing, analysis, or serving.
+
+* **Loading into BigQuery:**
+  * **Common Use Case:** Batch loading data for analytics and data warehousing.
+  * **Supported Formats:** CSV, JSON (newline-delimited), Avro, Parquet, ORC.
+  * **Methods:**
+    * **Cloud Console:** UI for creating load jobs.
+    * **`bq load` command-line tool:**
+            `bq load --source_format=CSV --skip_leading_rows=1 mydataset.mytable gs://mybucket/data.csv schema.json`
+    * **Client Libraries:** Programmatically initiate load jobs (Python, Java, etc.).
+    * **Federated Queries:** Query data in Cloud Storage directly without loading (for some formats), though loading is often better for performance on repeated queries.
+  * **Schema Detection:** BigQuery can often auto-detect schema for supported formats.
+---
+
+# From Cloud Storage into Cloud SQL
+
+* **Loading into Cloud SQL:**
+  * **Common Use Case:** Importing data into managed MySQL, PostgreSQL, or SQL Server instances.
+  * **Methods:**
+    * **Import from Cloud Storage:**
+      * For MySQL/PostgreSQL: Import SQL dump files (`.sql`) or CSV files.
+      * For SQL Server: Import BAK files (from Cloud Storage).
+      * Managed through Cloud Console or `gcloud sql import ...` commands.
+    * **Database Migration Service (DMS):** For more complex migrations, including continuous replication from on-premises or other clouds.
+
+---
+
+# From Cloud Storage into Compute Instance or K8s
+
+* **Compute Engine Instances:**
+  * Applications running on VMs can directly access data from Cloud Storage using:
+    * `gsutil` (e.g., in a startup script).
+    * Cloud Storage Client Libraries within the application code.
+    * Cloud Storage FUSE (mounts a bucket as a file system - use with caution for performance-sensitive apps).
+* **Google Kubernetes Engine (GKE) Pods:**
+  * Similar to Compute Engine, applications in containers can use client libraries or `gsutil` (if included in the container image) to access data from Cloud Storage.
+  * Service accounts with appropriate GCS permissions should be used (Workload Identity recommended).
+* **Key Benefit of Staging in GCS:** Decouples data ingestion from processing, provides a durable and cost-effective landing zone.
+
+---
+
+# Storage Transfer Service - Overview
+
+* **What is Storage Transfer Service?** A fully managed, high-performance service for transferring large amounts of data *into* Google Cloud Storage, *between* Cloud Storage buckets, or *from* other cloud providers (AWS S3, Azure Blob Storage, HTTP/HTTPS sources).
+* **Key Features:**
+  * **Managed Transfers:** Google manages the transfer infrastructure, parallelism, and retries. No servers to set up or manage.
+  * **Scalability & Performance:** Designed for terabytes to petabytes of data. Optimizes transfers for speed.
+  * **Scheduling:** One-time transfers or recurring scheduled transfers (e.g., daily, weekly).
+  * **Filtering:** Include/exclude objects based on prefixes, modification times, or specific object lists.
+  * **Data Integrity:** Performs data integrity checks during and after transfer.
+  * **Notifications:** Cloud Pub/Sub notifications on transfer completion or failure.
+  * **Logging:** Integrates with Cloud Logging for transfer monitoring.
+
+---
+
+# Storage Transfer Service - Use Cases
+
+* **Common Use Cases:**
+  * **Migrating data from on-premises storage to Cloud Storage:** (Requires an on-premises agent for file system transfers).
+  * **Migrating data from other cloud providers (AWS S3, Azure Blob) to Cloud Storage.**
+  * **Backing up data from one Cloud Storage bucket to another** (use native replication if possible).
+  * **Archiving data** by moving it from active buckets to archival storage classes in different buckets.
+  * **Ingesting data from public HTTP/HTTPS sources** (e.g., public datasets).
+* **Transfer Types:**
+  * **Cloud Storage to Cloud Storage:** Between buckets (can be different projects, locations, storage classes).
+  * **AWS S3 to Cloud Storage.**
+  * **Azure Blob Storage / Data Lake Storage Gen2 to Cloud Storage.**
+  * **HTTP/HTTPS List of URLs to Cloud Storage.**
+  * **File System to Cloud Storage (On-Premises Transfer):** Requires installing transfer agents on your on-premises servers.
+
+---
+
+# Storage Transfer Service - from on-premise
+
+```mermaid
+graph LR
+    subgraph On_Premise_Environment [On-Premise Environment]
+        OnPrem_Data[Your On-Premise Data Source e.g. File Servers/NFS]
+        Transfer_Agents[Transfer Agents Running On-Premise]
+    end
+
+    subgraph Google_Cloud_Environment [Google Cloud]
+        STS[Google Cloud Storage Transfer Service]
+        GCS_Bucket[Google Cloud Storage Bucket Destination]
+        Management_Console[Google Cloud Console/API for Setup]
+    end
+
+    OnPrem_Data -- Accessed by --> Transfer_Agents
+    Transfer_Agents -- Sends data to --> STS
+    STS -- Writes data to --> GCS_Bucket
+    Management_Console -- Configures --> STS
+
+    style OnPrem_Data fill:#f9f,stroke:#333,stroke-width:2px
+    style GCS_Bucket fill:#ccf,stroke:#333,stroke-width:2px
+```
