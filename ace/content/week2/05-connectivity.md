@@ -104,25 +104,27 @@ zoom: 0.7
 -->
 
 ---
-zoom: 0.6
----
 
-# Cloud VPN - Types & Use Cases
+# Cloud VPN - Types
 
 * **What is Cloud VPN?** Securely connects your on-premises network or another cloud provider's network to your Google Cloud VPC network over an IPsec VPN tunnel.
 * **Types of Cloud VPN Gateways:**
-  * **Classic VPN:**
-    * **Classic VPN tunnels will be deprecated on August 1, 2025**
+  * **Classic VPN: (deprecated on August 1, 2025)**
     * Supports static or policy-based routing.
     * Offers a 99.9% availability SLA.
     * Uses a regional VPN gateway resource.
-    * Does not support dynamic routing (BGP) directly on the gateway (though you could route to an NVA that speaks BGP).
+    * Does not support dynamic routing (BGP) directly on the gateway.
   * **HA (High Availability) VPN:**
     * **Recommended option.** Offers a 99.99% availability SLA when configured correctly.
     * Uses an external VPN gateway resource in GCP representing your peer gateway, and a HA VPN gateway in GCP with two interfaces, each with its own external IP.
     * Requires two tunnels from your peer gateway to the two interfaces on the GCP HA VPN gateway.
     * **Supports dynamic routing (BGP)** with Cloud Router for automatic route exchange and failover.
     * Can also support static routing.
+
+---
+
+# Cloud VPN - Use Cases
+
 * **Routing Options:**
   * **Static Routing:** Manually define routes on both sides of the tunnel. Simpler for small networks but less scalable and resilient.
   * **Dynamic Routing (BGP):** Use with Cloud Router (especially for HA VPN). Routes are learned and advertised automatically, enabling more complex topologies and faster failover.
