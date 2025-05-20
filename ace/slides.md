@@ -175,3 +175,7 @@ src: ./content/week2/07-managed-databases.md
 ---
 src: ./content/week2/08-questions.md
 ---
+
+---
+src: ./content/week3/01-recap-quiz.md
+---
