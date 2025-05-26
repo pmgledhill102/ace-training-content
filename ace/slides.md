@@ -179,3 +179,13 @@ src: ./content/week2/08-questions.md
 ---
 src: ./content/week3/01-recap-quiz.md
 ---
+
+---
+src: ./content/week4/content.md
+---
+
+---
+src: ./content/week4/qa.md
+---
+
+---
