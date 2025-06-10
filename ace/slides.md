@@ -197,3 +197,7 @@ src: ./content/week5/qa-2.md
 ---
 
 ---
+src: ./content/week6/qa.md
+---
+
+---
